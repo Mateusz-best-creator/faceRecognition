@@ -1,6 +1,10 @@
 import { initializeApp } from "firebase/app";
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 import { 
   getFirestore,
@@ -24,23 +28,19 @@ const app = initializeApp(firebaseConfig);
 
 const auth = getAuth();
 
-export const signUpUserWithEmailAndPassword = (email, password) => {
-  return createUserWithEmailAndPassword(auth, email, password);
-}
-
 const db = getFirestore(app);
 
-export const createUserDocumentFromAuth = async (user) => {
+export const createUserDocumentFromAuth = async (user, name) => {
   const documentReference = doc(db, 'users', user.uid);
   const documentSnapshot = await getDoc(documentReference);
 
   if(!documentSnapshot.exists()) {
-    const {displayName, email} = user;
+    const {email} = user;
     const dataCreated = new Date();
 
     try {
       await setDoc(documentReference, {
-        displayName,
+        name,
         email,
         dataCreated,
       });
@@ -50,3 +50,12 @@ export const createUserDocumentFromAuth = async (user) => {
   }
   return documentReference;
 }
+
+export const signUpUserWithEmailAndPassword = (email, password) => {
+  return createUserWithEmailAndPassword(auth, email, password);
+}
+
+export const signInUserWithEmailAndPassword = (email, password) => {
+  return signInWithEmailAndPassword(auth, email, password);
+}
+

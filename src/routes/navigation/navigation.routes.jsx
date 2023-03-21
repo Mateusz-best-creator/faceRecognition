@@ -7,12 +7,18 @@ import { useNavigate } from "react-router-dom";
 // styling
 import './navigation.styles.scss';
 
+// redux hooks
+import { useDispatch } from "react-redux";
+import {setCurrentUser} from '../../store/user/user.actions';
+
 const Navigation = () => {
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const navigateSignOut = () => {
+        dispatch(setCurrentUser(null));
         // we sign out but we go to sign in component
-        navigate('/sign-in');
+        navigate('/');
     }
 
     return (

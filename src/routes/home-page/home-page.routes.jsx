@@ -1,9 +1,8 @@
 // react parrallax tilt
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Tilt from 'react-parallax-tilt';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 // png image
 import WorkingLogo from '../../assets/working.png'
@@ -11,12 +10,18 @@ import WorkingLogo from '../../assets/working.png'
 // styles
 import './home-page.styles.scss';
 
+// redux selector
+import { useSelector } from 'react-redux';
+import {selectCurrentUser} from '../../store/user/user.selector';
+
 const HomePage = () => {
 
     const defaultUrlValue = '';
     const [imageUrlInput, setImageUrlInput] = useState(defaultUrlValue);
     const [imageUrl, setImageUrl] = useState(defaultUrlValue);
-
+    const userName = useSelector(selectCurrentUser);
+    console.log(userName.auth);
+ 
     const handleUrlChange = (event) => {
         setImageUrlInput(event.target.value);
     }
@@ -34,7 +39,7 @@ const HomePage = () => {
                     </Tilt>
                 </div>
 
-                <p className='user-counter'>currentUserName, you have uploaded 10 photos so far </p>
+                <p className='user-counter'>userName, welcome! </p>
                 <h2 style={{color: 'white'}}>You can put url in first input, give it a try!</h2>
                 <div className='input-container'>
                     <div className='single-input'>
@@ -47,7 +52,6 @@ const HomePage = () => {
                 </div>
             </div>
             <div className='image-container'>
-                {console.log("image url :", imageUrl)}
                     {
                         imageUrl 
                         ? <img className='displayed-photo' src={imageUrl} alt='' />

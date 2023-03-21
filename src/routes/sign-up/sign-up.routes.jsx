@@ -8,8 +8,15 @@ import {
     createUserDocumentFromAuth,
 } from '../../utils/firebase.utils';
 
+// navigate hook
+import { useNavigate } from "react-router-dom";
+
+// redux hook
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "../../store/user/user.actions";
+
 const defaultValues = {
-    firstame: '',
+    displayName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -17,6 +24,8 @@ const defaultValues = {
 
 const SignUp = () => {
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [inputFields, setInputFields] = useState(defaultValues);
     const { displayName, email, password, confirmPassword } = inputFields;
 
@@ -30,7 +39,9 @@ const SignUp = () => {
         try {
             const {user} = await signUpUserWithEmailAndPassword(email, password);
             
-            await createUserDocumentFromAuth(user);
+            await createUserDocumentFromAuth(user, displayName);
+            dispatch(setCurrentUser(user));
+            navigate('/home-page');
 
         } catch(error) {
             if (error.code === 'auth/email-already-in-use') {
@@ -45,7 +56,12 @@ const SignUp = () => {
     const handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
+        
         setInputFields({...inputFields, [name]: value})
+    }
+
+    const goToSignInHandler = () => {
+        navigate('/');
     }
 
     return (
@@ -56,7 +72,7 @@ const SignUp = () => {
                     <legend className="f4 fw6 ph0 mh0">Sign Up</legend>
                     <div className="mt3">
                         <label className="db fw6 lh-copy f6" htmlFor="first-name">First Name</label>
-                        <input onChange={handleChange} className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="text" name="firstame"  id="first-name" value={displayName} />
+                        <input onChange={handleChange} className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="text" name="displayName"  id="displayName" value={displayName} />
                     </div>
                     <div className="mt3">
                         <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
@@ -68,14 +84,14 @@ const SignUp = () => {
                     </div>
                     <div className="mv3">
                         <label className="db fw6 lh-copy f6" htmlFor="password">Confirm Password</label>
-                        <input onChange={handleChange} className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="password" name="confirmPassword"  id="password" value={confirmPassword} />
+                        <input onChange={handleChange} className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="password" name="confirmPassword"  id="confirmPassword" value={confirmPassword} />
                     </div>
                     </fieldset>
                     <div className="">
-                    <input style={{width: '100%', padding: '0.8rem'}} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Sign in" />
+                    <input style={{width: '100%', padding: '0.8rem'}} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Sign Up" />
                     </div>
                     <div className="lh-copy mt3">
-                    <input style={{width: '100%', padding: '0.8rem'}} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="button" value="Sign up" />
+                    <input onClick={() => goToSignInHandler()} style={{width: '100%', padding: '0.8rem'}} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="button" value="Go To Sign In Form" />
                     </div>
                 </form>
             </main>
