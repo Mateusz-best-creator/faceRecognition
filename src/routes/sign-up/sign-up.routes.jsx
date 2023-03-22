@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 // redux hook
 import { useDispatch } from "react-redux";
-import { setCurrentUser } from "../../store/user/user.actions";
+import { setCurrentDirection } from "../../store/navigation/navigation.actions";
 
 const defaultValues = {
     displayName: '',
@@ -38,9 +38,8 @@ const SignUp = () => {
 
         try {
             const {user} = await signUpUserWithEmailAndPassword(email, password);
-            
+            dispatch(setCurrentDirection('home-page'))
             await createUserDocumentFromAuth(user, displayName);
-            dispatch(setCurrentUser(user));
             navigate('/home-page');
 
         } catch(error) {

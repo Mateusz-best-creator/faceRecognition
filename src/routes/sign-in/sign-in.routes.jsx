@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 // redux hooks
 import { useDispatch } from "react-redux";
-import { setCurrentUser } from "../../store/user/user.actions";
+import { setCurrentDirection } from "../../store/navigation/navigation.actions";
 
 const defaultValues = {
     email: '',
@@ -29,11 +29,9 @@ const SignIn = () => {
         event.preventDefault();
 
         try {
-            const {user} = await signInUserWithEmailAndPassword(email, password);
-
-            dispatch(setCurrentUser(user));
-            
+            await signInUserWithEmailAndPassword(email, password);
             navigate('/home-page')
+            dispatch(setCurrentDirection('home-page'))
         }catch(error) {
             if (error.code === 'auth/wrong-password') {
                 alert('Wrong password.');
